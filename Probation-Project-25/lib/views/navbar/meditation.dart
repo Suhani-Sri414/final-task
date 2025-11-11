@@ -184,6 +184,20 @@ class _MeditationPageState extends State<MeditationPage> {
                         "Calm anxious thoughts and bring peace to your mind.",
                     imagePath: "assets/images/m4.png",
                     url: "https://www.youtube.com/embed/O-6f5wQXSu8"),
+                    meditationCard(
+                  title: "Sleep Meditation",
+                  description:
+                      "Gentle guidance to help you let go of the day's worries and drift into peaceful, restorative sleep.\n\nBenefits:\n• Improves sleep quality\n• Eases insomnia\n• Calms nighttime anxiety",
+                  imagePath: "assets/images/m5.png",
+                  url: "https://www.youtube.com/embed/g0jfhRcXtLQ",
+                ),
+                meditationCard(
+                  title: "Mindful Walking",
+                  description:
+                      "A moving meditation that combines gentle movement with mindfulness.\n\nBenefits:\n• Includes movement\n• Boosts mood naturally\n• Great for restless energy",
+                  imagePath: "assets/images/m6.png",
+                  url: "https://www.youtube.com/embed/NfPBlRE4RIc",
+                ),
               ],
             ),
           ],
