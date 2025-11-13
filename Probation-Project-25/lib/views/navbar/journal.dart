@@ -5,7 +5,7 @@ import 'package:mind_ease_app/controller/journal_controller.dart';
 import 'package:mind_ease_app/controller/stats_controller.dart';
 
 class JournalPage extends StatefulWidget {
-  final StatsController controller; // ✅ connect StatsController from StatsPage
+  final StatsController controller; 
   const JournalPage({super.key, required this.controller});
 
   @override
@@ -24,7 +24,7 @@ class _JournalPageState extends State<JournalPage> {
   @override
   void initState() {
     super.initState();
-    _loadSavedJournals(); // Load existing entries
+    _loadSavedJournals(); 
   }
 
   @override
@@ -35,11 +35,8 @@ class _JournalPageState extends State<JournalPage> {
 
   Future<void> _loadSavedJournals() async {
     final data = await journalControllerInstance.fetchJournalEntries();
-
     setState(() {
       savedJournals = data;
-
-      // Pre-fill today's journal if exists
       final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
       final todayEntry = savedJournals.firstWhere(
         (e) => (e['date'] ?? '').startsWith(today),
@@ -55,16 +52,14 @@ class _JournalPageState extends State<JournalPage> {
   }
 
   void _startJournalTimer() {
-    // ✅ Start timer when user begins typing
     _journalTimer ??= Timer.periodic(const Duration(seconds: 1), (timer) async {
       _secondsWriting++;
-
       if (_secondsWriting >= 10 && !_journalAutoChecked) {
         _journalAutoChecked = true;
-        widget.controller.autoCheckJournalTask(); // ✅ mark task complete in stats
+        widget.controller.autoCheckJournalTask(); 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("✅ Journal Entry task completed automatically!"),
+            content: Text("Journal Entry task completed automatically!"),
             duration: Duration(seconds: 2),
           ),
         );
@@ -75,9 +70,8 @@ class _JournalPageState extends State<JournalPage> {
   @override
   Widget build(BuildContext context) {
     final String formattedDate =
-        DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now());
+     DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now());
     const Color tealColor = Color.fromARGB(255, 33, 150, 84);
-
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 253, 247, 231),
       body: SingleChildScrollView(
@@ -86,20 +80,15 @@ class _JournalPageState extends State<JournalPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 10),
-            const Icon(Icons.book_outlined,
-                size: 60, color: Color.fromARGB(255, 31, 58, 95)),
+            const Icon(Icons.book_outlined,size: 60, color: Color.fromARGB(255, 31, 58, 95)),
             const SizedBox(height: 8),
             const Text(
               "Your Daily Journal",
               style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 31, 58, 95),
+                fontSize: 22,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 31, 58, 95),
               ),
             ),
             const SizedBox(height: 20),
-
-            // Journal Input Section
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -112,32 +101,27 @@ class _JournalPageState extends State<JournalPage> {
                   Text(
                     formattedDate,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 31, 58, 95),
-                      fontSize: 15,
+                      fontWeight: FontWeight.bold,color: Color.fromARGB(255, 31, 58, 95),fontSize: 15,
                     ),
                   ),
                   const SizedBox(height: 8),
                   const Text(
                     "What's on your mind?",
                     style: TextStyle(
-                      color: Color.fromARGB(255, 31, 58, 95),
-                      fontWeight: FontWeight.w600,
+                      color: Color.fromARGB(255, 31, 58, 95),fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: journalController,
                     maxLines: 6,
-                    onChanged: (_) => _startJournalTimer(), // ✅ detect typing
+                    onChanged: (_) => _startJournalTimer(), 
                     decoration: InputDecoration(
                       hintText:
-                          "Write your thoughts, feelings, or reflections here...",
+                       "Write your thoughts, feelings, or reflections here...",
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
                   const SizedBox(height: 15),
@@ -145,78 +129,63 @@ class _JournalPageState extends State<JournalPage> {
                     child: ElevatedButton(
                       onPressed: () async {
                         final text = journalController.text.trim();
-
                         if (text.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Please write your journal.')),
+                            const SnackBar(content: Text('Please write your journal.')),
                           );
                           return;
                         }
-
-                        final result = await journalControllerInstance
-                            .submitJournalEntry(text);
-
+                        final result = await journalControllerInstance.submitJournalEntry(text);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text(result ?? 'Error submitting journal')),
+                           SnackBar(content: Text(result ?? 'Error submitting journal')),
                         );
-
                         journalController.clear();
                         await _loadSavedJournals();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: tealColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 35, vertical: 10),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
                       ),
                       child: const Text("Save Text",
-                          style: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.white)
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-
             const SizedBox(height: 30),
-
-            // Display Saved Journals
             if (savedJournals.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Saved Journal Entries",
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Saved Journal Entries",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Color.fromARGB(255, 31, 58, 95),
+                      fontWeight: FontWeight.bold,fontSize: 18,color: Color.fromARGB(255, 31, 58, 95),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: savedJournals.length,
-                    itemBuilder: (context, index) {
-                      final entry = savedJournals[index];
-                      final dateFormatted = DateFormat('EEEE, MMM d, yyyy')
-                          .format(DateTime.parse(entry['date']));
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 6),
-                        child: ListTile(
-                          title: Text(entry['content'] ?? ''),
-                          subtitle: Text("Date: $dateFormatted"),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 10),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: savedJournals.length,
+                  itemBuilder: (context, index) {
+                    final entry = savedJournals[index];
+                    final dateFormatted = DateFormat('EEEE, MMM d, yyyy')
+                      .format(DateTime.parse(entry['date']));
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        title: Text(entry['content'] ?? ''),
+                        subtitle: Text("Date: $dateFormatted"),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),

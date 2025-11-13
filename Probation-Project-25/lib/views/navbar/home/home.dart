@@ -233,25 +233,8 @@ class _HomePageState extends State<HomePage> {
 
                           },
                         ),
-                        FeatureCard(
-                          iconPath: 'assets/icons/mood_prediction.png',
-                          title: "Mood Detection",
-                          description:
-                              "AI-powered mood tracking helps you identify emotional patterns and triggers.",
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ChatbotPage()));
-                          },
-                        ),
-                        FeatureCard(
-                          iconPath: 'assets/icons/community_space.png',
-                          title: "Community Space",
-                          description:
-                              "Connect with others, share your experiences, and grow together.",
-                        ),
+                        
+                        
                         FeatureCard(
                           iconPath: 'assets/icons/ai_companion.png',
                           title: "AI Companion",
@@ -355,13 +338,14 @@ class _HomePageState extends State<HomePage> {
           : _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color.fromARGB(255, 237, 228, 198),
-        selectedItemColor: const Color.fromARGB(255, 33, 150, 84),
-        unselectedItemColor: Colors.black54,
+        backgroundColor:  Color.fromARGB(255, 31, 58, 95),
+        selectedItemColor: Color.fromARGB(255, 33, 150, 84),
+        unselectedItemColor: Colors.white,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          
           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Journal'),
           BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Meditation'),
           BottomNavigationBarItem(icon: Icon(Icons.smart_toy), label: 'AI Therapist'),

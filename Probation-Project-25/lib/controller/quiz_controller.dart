@@ -16,21 +16,30 @@ class QuizController with ChangeNotifier {
   QuizQuestion get currentQuestion => _questions[_currentIndex];
   Map<String, String> get userAnswers => _userAnswers;
 
-  
+  /// ✅ Load quiz dynamically (auto-detects profession)
   Future<void> loadQuiz() async {
-    isLoading = true;
+  isLoading = true;
+  notifyListeners();
+
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final profession = prefs.getString('profession') ?? 'student';
+    debugPrint('👤 Loading quiz for: $profession');
+
+    _questions = await _quizService.fetchQuiz(profession);
+
+    debugPrint('✅ Loaded ${_questions.length} questions');
+  } catch (e) {
+    debugPrint('❌ Error loading quiz: $e');
+    _questions = [];
+  } finally {
+    isLoading = false;
     notifyListeners();
-
-    try {
-      _questions = await _quizService.fetchQuiz();
-    } catch (e) {
-      debugPrint(' Error loading quiz: $e');
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
   }
+}
 
+
+  /// ✅ Handle answer selection
   void answerQuestion(String questionId, String answer) {
     _userAnswers[questionId] = answer;
     notifyListeners();
@@ -50,74 +59,79 @@ class QuizController with ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> submitAnswers() async {
-    try {
-      final List<dynamic> answersList = _userAnswers.values.toList();
-      final result = await _quizService.submitQuiz(answersList);
-      return result;
-    } catch (e) {
-      debugPrint(' Error submitting quiz: $e');
-      return {'success': false, 'message': 'Failed to submit quiz'};
-    }
-  }
-
-  Future<Map<String, dynamic>> fetchResult() async {
-   try {
-     final result = await _quizService.fetchResult();
-     if (result['success'] == true && result['result'] != null) {
-       final res = result['result'];
-       final score = (res['score'] ?? 0).toDouble();
-       await saveQuizScore(score);
-       debugPrint(' Quiz score saved locally: $score');
-       debugPrint(' Full API Result: ${result['result']}');
-       notifyListeners();
-
-       return {
-         'success': true,
-         'prediction': res['prediction'] ?? 'No prediction',
-         'confidence': res['probability'] != null
-            ? '${(res['probability'] * 100).toStringAsFixed(1)}%'
-            : 'N/A',
-         'score': score,
-         'score_text': res['score_text'] ?? '',
-        };
-      } else {
-       debugPrint('Invalid quiz result response: $result');
-       return {
-         'success': false,
-         'message': 'Invalid response format',
-         'score': 0.0
-        };
-      }
-    } catch (e) {
-     debugPrint('Error fetching result: $e');
-     return {
-       'success': false,
-       'message': 'Failed to fetch result',
-       'score': 0.0
-      };
-    }
-  }
-  
-  Future<void> saveQuizScore(double score) async {
+  /// ✅ Submit quiz dynamically based on saved profession
+  Future<void> submitQuiz(BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setDouble('quiz_score', score);
-      debugPrint(' Score saved in SharedPreferences: $score');
-    } catch (e) {
-      debugPrint(' Error saving quiz score: $e');
+      final profession = prefs.getString('profession') ?? 'student';
+
+      // Convert user answers for backend format
+      final formattedAnswers = _userAnswers.entries
+          .map((e) => {'questionId': e.key, 'answer': e.value})
+          .toList();
+
+      debugPrint('📤 Submitting ${formattedAnswers.length} answers for $profession');
+
+      final result = await _quizService.submitQuiz(formattedAnswers, profession);
+
+      debugPrint('✅ Quiz submitted successfully → $result');
+
+      if (!context.mounted) return;
+
+      Navigator.pushReplacementNamed(
+        context,
+        '/quizResult',
+        arguments: result,
+      );
+    } catch (e, st) {
+      debugPrint('❌ Error submitting quiz: $e\n$st');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error submitting quiz')),
+        );
+      }
     }
+  }
+
+  /// ✅ Fetch quiz result dynamically (auto-selects based on profession)
+  Future<Map<String, dynamic>> fetchResult() async {
+    try {
+      final result = await _quizService.fetchResult();
+
+      if (result['success'] == true) {
+        final res = result['result'] ?? result;
+
+        final score = (res['stress_score'] ?? res['score'] ?? 0).toDouble();
+        await saveQuizScore(score);
+
+        debugPrint('💾 Quiz score saved: $score');
+
+        return {
+          'success': true,
+          'prediction': res['prediction'] ?? 'No prediction',
+          'stress_level': res['stress_level'] ?? '',
+          'confidence': res['confidence'] ?? '',
+          'stress_score': res['stress_score'] ?? '',
+          'recommendation':
+              res['recommendation'] ?? res['score_text'] ?? 'No data available',
+        };
+      } else {
+        return {'success': false, 'message': 'Invalid response'};
+      }
+    } catch (e, st) {
+      debugPrint('❌ Error fetching result: $e\n$st');
+      return {'success': false, 'message': 'Failed to fetch result'};
+    }
+  }
+
+  /// ✅ Save and Load Quiz Score
+  Future<void> saveQuizScore(double score) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('quiz_score', score);
   }
 
   Future<double> loadQuizScore() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final storedScore = prefs.getDouble('quiz_score') ?? 0.0;
-      debugPrint(' Loaded quiz score from storage: $storedScore');
-      return storedScore;
-    } catch (e) {
-      debugPrint(' Error loading quiz score: $e');
-      return 0.0;
-    }
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('quiz_score') ?? 0.0;
   }
 }

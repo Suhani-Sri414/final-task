@@ -188,7 +188,7 @@ class _QuizPageState extends State<QuizPage> {
                           controller.nextQuestion();
                         } else {
                           // ✅ Submit quiz and fetch result
-                          await controller.submitAnswers();
+                          await controller.submitQuiz(context);
                           final resultData = await controller.fetchResult();
                           print('🔍 Full Result Data: $resultData');
 

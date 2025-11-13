@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mind_ease_app/views/auth/profession_selection_overlay.dart';
 import 'package:mind_ease_app/views/navbar/home/home.dart';
 import 'package:mind_ease_app/views/navbar/home/quizz.dart';
+import 'package:mind_ease_app/views/navbar/home/quizz_result.dart';
 import 'package:mind_ease_app/views/navbar/journal.dart';
 import 'package:mind_ease_app/views/auth/login.dart';
 import 'package:mind_ease_app/views/navbar/meditation.dart';
@@ -40,8 +42,10 @@ class MindEaseApp extends StatelessWidget {
       routes: {
         'login': (context) => const MyLogin(),
         'register': (context) => const MyRegister(),
+        'profession_selection_overlay': (context) =>  ProfessionSelectionOverlay(),
         'home': (context) => const HomePage(),
         'quizz': (context) => const QuizPage(),
+        'quizz_result': (context) =>  QuizResultPage(),
         'journal': (context) => JournalPage(controller: StatsController(name: "User", quizScore: 0)),
         'meditation': (context) => const MeditationPage(),
         'ai_therapist': (context) => const ChatbotPage(),

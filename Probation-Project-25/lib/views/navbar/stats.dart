@@ -4,7 +4,11 @@ import 'package:mind_ease_app/controller/stats_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StatsPage extends StatefulWidget {
-  const StatsPage({super.key, required String userName, required int quizScore});
+  const StatsPage({
+    super.key,
+    required String userName,
+    required int quizScore,
+  });
 
   @override
   State<StatsPage> createState() => _StatsPageState();
@@ -29,7 +33,6 @@ class _StatsPageState extends State<StatsPage> {
     final name = prefs.getString('user_name') ?? "User";
     final storedScore = prefs.getDouble('quiz_score') ?? 0.0;
 
-    
     controller = StatsController(name: name, quizScore: storedScore);
     await controller.loadData();
 
@@ -39,9 +42,6 @@ class _StatsPageState extends State<StatsPage> {
       isLoading = false;
     });
   }
-
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -80,10 +80,11 @@ class _StatsPageState extends State<StatsPage> {
             ),
             const SizedBox(height: 8),
             _buildHealthScore(),
-
             const SizedBox(height: 20),
-            const Text("How are you feeling today?", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-
+            const Text(
+              "How are you feeling today?",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -99,24 +100,22 @@ class _StatsPageState extends State<StatsPage> {
                         });
                       },
                     ),
-                    Text(entry.key)
+                    Text(entry.key),
                   ],
                 );
               }).toList(),
             ),
-
             const SizedBox(height: 20),
-            const Text("Analysis", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-
+            const Text(
+              "Analysis",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             _buildPieChart(),
-
             const SizedBox(height: 20),
             _buildTaskSection(),
-
             const SizedBox(height: 20),
             _buildRecentActivity(),
-
             const SizedBox(height: 20),
             _buildOverview(),
           ],
@@ -136,16 +135,21 @@ class _StatsPageState extends State<StatsPage> {
         const SizedBox(height: 8),
         Text(
           "${_quizScore.toStringAsFixed(0)}%",
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.teal),
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.teal,
+          ),
         ),
         const SizedBox(height: 8),
-        Slider(
-          value: _quizScore.clamp(0.0, 100.0),
-          min: 0,
-          max: 100,
-          divisions: 5,
-          activeColor: Colors.teal,
-          onChanged: (_) {}, // read-only
+        LinearProgressIndicator(
+          value: (_quizScore.clamp(0.0, 100.0)) / 100, // convert 0–100 to 0–1
+          backgroundColor: Colors.grey.shade300,
+          color: Colors.teal,
+          minHeight: 8, // optional — makes it thicker
+          borderRadius: BorderRadius.circular(
+            10,
+          ), // optional — gives rounded look (Flutter 3.7+)
         ),
       ],
     );
@@ -170,8 +174,12 @@ class _StatsPageState extends State<StatsPage> {
               title: "${e.key} ${(e.value).toStringAsFixed(1)}%",
               value: e.value,
               color: color,
-              radius: 50,
-              titleStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+              radius: 120,
+              titleStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             );
           }).toList(),
           sectionsSpace: 2,
@@ -182,67 +190,69 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   Widget _buildTaskSection() {
-  final taskTitles = [
-    "Morning Meditation",
-    "Journal Entry",
-    "Evening Mood Check",
-  ];
+    final taskTitles = [
+      "Morning Meditation",
+      "Journal Entry",
+      "Evening Mood Check",
+    ];
 
-  return Card(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    color: Colors.white,
-    elevation: 3,
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Today's Goals",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 10),
-          ...List.generate(taskTitles.length, (index) {
-            return CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                taskTitles[index],
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: Colors.white,
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Today's Goals",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
               ),
-              value: controller.user.taskCompletion[index],
-              activeColor: Colors.teal,
-              onChanged: null, // ❌ disable manual selection
-            );
-          }),
-          const SizedBox(height: 12),
-          const Divider(),
-          Center(
-            child: Column(
-              children: [
-                LinearProgressIndicator(
-                  minHeight: 10,
-                  value: controller.getTaskCompletionPercentage() / 100,
-                  color: Colors.teal,
-                  backgroundColor: Colors.grey[200],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "${controller.getTaskCompletionPercentage().toStringAsFixed(0)}% Completed",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+            ...List.generate(taskTitles.length, (index) {
+              return CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  taskTitles[index],
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                value: controller.user.taskCompletion[index],
+                activeColor: Colors.teal,
+                onChanged: null,
+              );
+            }),
+            const SizedBox(height: 12),
+            const Divider(),
+            Center(
+              child: Column(
+                children: [
+                  LinearProgressIndicator(
+                    minHeight: 10,
+                    value: controller.getTaskCompletionPercentage() / 100,
+                    color: Colors.teal,
+                    backgroundColor: Colors.grey[200],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "${controller.getTaskCompletionPercentage().toStringAsFixed(0)}% Completed",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildRecentActivity() {
     return Card(
@@ -252,12 +262,17 @@ class _StatsPageState extends State<StatsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Recent Activity", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              "Recent Activity",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             if (controller.user.recentActivity.isEmpty)
               const Text("No recent activity yet.")
             else
-              ...controller.user.recentActivity.map((page) => Text("• $page")).toList(),
+              ...controller.user.recentActivity
+                  .map((page) => Text("• $page"))
+                  .toList(),
           ],
         ),
       ),
@@ -268,9 +283,21 @@ class _StatsPageState extends State<StatsPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _overviewCard("Daily Streak", "${controller.user.dailyStreak} days", Colors.greenAccent),
-        _overviewCard("Top Pages", "${controller.user.recentActivity.length}", Colors.orangeAccent),
-        _overviewCard("Total Moods", "${controller.user.moodCounts.values.fold(0, (a, b) => a + b)}", Colors.purpleAccent),
+        _overviewCard(
+          "Daily Streak",
+          "${controller.user.dailyStreak} days",
+          Colors.greenAccent,
+        ),
+        _overviewCard(
+          "Top Pages",
+          "${controller.user.recentActivity.length}",
+          Colors.orangeAccent,
+        ),
+        _overviewCard(
+          "Total Moods",
+          "${controller.user.moodCounts.values.fold(0, (a, b) => a + b)}",
+          Colors.purpleAccent,
+        ),
       ],
     );
   }

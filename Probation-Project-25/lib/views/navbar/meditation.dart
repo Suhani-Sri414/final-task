@@ -29,7 +29,6 @@ class _MeditationPageState extends State<MeditationPage> {
     super.dispose();
   }
 
-  
   void _startTimer() {
     if (_isMeditating) return;
     setState(() {
@@ -70,11 +69,6 @@ class _MeditationPageState extends State<MeditationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 253, 247, 231),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 253, 247, 231),
-        elevation: 0,
-        centerTitle: true,
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -84,9 +78,7 @@ class _MeditationPageState extends State<MeditationPage> {
               child: Text(
                 "Guided meditations for mental wellness",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 31, 58, 95),
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 31, 58, 95),fontSize: 22,fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -95,21 +87,18 @@ class _MeditationPageState extends State<MeditationPage> {
             const Text(
               "You don't have to face this alone. These specially designed meditations are here to support you through difficult times.",
               style: TextStyle(
-                  color: Color.fromARGB(255, 31, 58, 95), fontSize: 12),
+                color: Color.fromARGB(255, 31, 58, 95), fontSize: 12
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-
-            
             Center(
               child: Column(
                 children: [
                   Text(
                     _formatTime(_seconds),
                     style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 33, 150, 84),
+                      fontSize: 32,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 33, 150, 84),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -121,9 +110,7 @@ class _MeditationPageState extends State<MeditationPage> {
                         icon: const Icon(Icons.play_arrow),
                         label: const Text("Start"),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 33, 150, 84),
-                          foregroundColor: Colors.white,
+                          backgroundColor:const Color.fromARGB(255, 33, 150, 84),foregroundColor: Colors.white,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -132,9 +119,7 @@ class _MeditationPageState extends State<MeditationPage> {
                         icon: const Icon(Icons.stop),
                         label: const Text("Stop"),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 220, 80, 60),
-                          foregroundColor: Colors.white,
+                          backgroundColor:const Color.fromARGB(255, 220, 80, 60),foregroundColor: Colors.white,
                         ),
                       ),
                     ],
@@ -146,12 +131,10 @@ class _MeditationPageState extends State<MeditationPage> {
             const Text(
               "Choose your practice",
               style: TextStyle(
-                  color: Color.fromARGB(255, 31, 58, 95),
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold),
+                color: Color.fromARGB(255, 31, 58, 95),fontSize: 17,fontWeight: FontWeight.bold
+              ),
             ),
             const SizedBox(height: 15),
-
             GridView.count(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -161,42 +144,40 @@ class _MeditationPageState extends State<MeditationPage> {
               childAspectRatio: 0.6,
               children: [
                 meditationCard(
-                    title: "Loving-Kindness (Metta)",
-                    description:
-                        "Cultivates self-compassion and kindness towards yourself.",
-                    imagePath: "assets/images/m1.png",
-                    url: "https://www.youtube.com/embed/-d_AA9H4z9U"),
-                meditationCard(
-                    title: "Breathing for Calm",
-                    description:
-                        "Breathing techniques to centre yourself and find relief.",
-                    imagePath: "assets/images/m2.png",
-                    url: "https://www.youtube.com/embed/VUjiXcfKBn8"),
-                meditationCard(
-                    title: "Body Scan for Depression",
-                    description:
-                        "Reconnect with your body and release tension.",
-                    imagePath: "assets/images/m3.png",
-                    url: "https://www.youtube.com/embed/_DTmGtznab4"),
-                meditationCard(
-                    title: "Anxiety Relief Meditation",
-                    description:
-                        "Calm anxious thoughts and bring peace to your mind.",
-                    imagePath: "assets/images/m4.png",
-                    url: "https://www.youtube.com/embed/O-6f5wQXSu8"),
-                    meditationCard(
-                  title: "Sleep Meditation",
-                  description:
-                      "Gentle guidance to help you let go of the day's worries and drift into peaceful, restorative sleep.\n\nBenefits:\n• Improves sleep quality\n• Eases insomnia\n• Calms nighttime anxiety",
-                  imagePath: "assets/images/m5.png",
-                  url: "https://www.youtube.com/embed/g0jfhRcXtLQ",
+                 title: "Loving-Kindness (Metta)",
+                 description:"Cultivates self-compassion and kindness towards yourself.",
+                 imagePath: "assets/images/m1.png",
+                 url: "https://www.youtube.com/embed/-d_AA9H4z9U"
                 ),
                 meditationCard(
-                  title: "Mindful Walking",
-                  description:
-                      "A moving meditation that combines gentle movement with mindfulness.\n\nBenefits:\n• Includes movement\n• Boosts mood naturally\n• Great for restless energy",
-                  imagePath: "assets/images/m6.png",
-                  url: "https://www.youtube.com/embed/NfPBlRE4RIc",
+                 title: "Breathing for Calm",
+                 description:"Breathing techniques to centre yourself and find relief.",
+                 imagePath: "assets/images/m2.png",
+                 url: "https://www.youtube.com/embed/VUjiXcfKBn8"
+                ),
+                meditationCard(
+                 title: "Body Scan for Depression",
+                 description:"Reconnect with your body and release tension.",
+                 imagePath: "assets/images/m3.png",
+                 url: "https://www.youtube.com/embed/_DTmGtznab4"
+                ),
+                meditationCard(
+                 title: "Anxiety Relief Meditation",
+                 description:"Calm anxious thoughts and bring peace to your mind.",
+                 imagePath: "assets/images/m4.png",
+                 url: "https://www.youtube.com/embed/O-6f5wQXSu8"
+                ),
+                meditationCard(
+                 title: "Sleep Meditation",
+                 description:"Gentle guidance to help you let go of the day's worries and drift into peaceful, restorative sleep.\n\nBenefits:\n• Improves sleep quality\n• Eases insomnia\n• Calms nighttime anxiety",
+                 imagePath: "assets/images/m5.png",
+                 url: "https://www.youtube.com/embed/g0jfhRcXtLQ",
+                ),
+                meditationCard(
+                 title: "Mindful Walking",
+                 description:"A moving meditation that combines gentle movement with mindfulness.\n\nBenefits:\n• Includes movement\n• Boosts mood naturally\n• Great for restless energy",
+                 imagePath: "assets/images/m6.png",
+                 url: "https://www.youtube.com/embed/NfPBlRE4RIc",
                 ),
               ],
             ),
@@ -205,7 +186,6 @@ class _MeditationPageState extends State<MeditationPage> {
       ),
     );
   }
-
   Widget meditationCard({
     required String title,
     required String description,
@@ -226,25 +206,22 @@ class _MeditationPageState extends State<MeditationPage> {
             children: [
               ClipRRect(
                 child: Image.asset(
-                  imagePath,
-                  height: 100,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                  imagePath,height: 100,width: double.infinity,fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(height: 8),
-              Text(title,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 31, 58, 95),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15)),
+              Text(
+               title,
+               style: const TextStyle(
+                 color: Color.fromARGB(255, 31, 58, 95),fontWeight: FontWeight.bold,fontSize: 15
+                )
+              ),
               const SizedBox(height: 4),
               Expanded(
                 child: Text(
                   description,
                   style: const TextStyle(
-                    fontSize: 12,
-                    color: Color.fromARGB(255, 31, 58, 95),
+                    fontSize: 12,color: Color.fromARGB(255, 31, 58, 95),
                   ),
                 ),
               ),
@@ -256,11 +233,11 @@ class _MeditationPageState extends State<MeditationPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 33, 150, 84),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 child: const Text("Start Session",
-                    style: TextStyle(color: Colors.white, fontSize: 12)),
+                 style: TextStyle(color: Colors.white, fontSize: 12)
+                ),
               ),
             ],
           ),
