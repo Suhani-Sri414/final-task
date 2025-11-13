@@ -79,4 +79,40 @@ class AuthService {
       };
     }
   }
+
+  Future<Map<String, dynamic>> postRequest(
+    String endpoint,
+    Map<String, dynamic> data, {
+    String? token,
+  }) async {
+    try {
+      final url = Uri.parse('$baseUrl$endpoint');
+      final headers = {
+        'Content-Type': 'application/json',
+        if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
+      };
+
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(data),
+      );
+
+      debugPrint('POST $endpoint → ${response.statusCode}');
+      debugPrint('Response: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        return {
+          'success': false,
+          'message': 'Request failed with status: ${response.statusCode}',
+          'body': response.body,
+        };
+      }
+    } catch (e) {
+      debugPrint('Error in postRequest($endpoint): $e');
+      return {'success': false, 'message': 'Exception: $e'};
+    }
+  }
 }

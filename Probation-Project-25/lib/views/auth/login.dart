@@ -25,7 +25,7 @@ class _MyLoginState extends State<MyLogin> {
             alignment: Alignment.topCenter,
             child: Padding(padding: const EdgeInsets.only(top: 50),
               child: Image.asset(
-                'assets/images/mindeaselogo.png',height: 300,width: 300,
+                'assets/icons/mindeaselogo.png',height: 300,width: 300,
               ),
             ),
           ),

@@ -35,10 +35,10 @@ class AuthController {
         final profession = prefs.getString('profession');
         if (profession == null || profession.isEmpty) {
           // Navigate to profession overlay
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => ProfessionSelectionOverlay()),
-          );
+          Navigator.push(
+  context,
+  MaterialPageRoute(builder: (_) => const ProfessionSelectionOverlay()),
+);
         } else {
           // Go directly to home
           Navigator.pushReplacementNamed(context, 'home');
@@ -66,9 +66,9 @@ class AuthController {
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('userId', data['_id'] ?? '');
-        await prefs.setString('name', data['name'] ?? name);
-        await prefs.setString('email', data['email'] ?? email);
+        await prefs.setString('user_id', data['_id'] ?? '');
+        await prefs.setString('user_name', data['name'] ?? name);
+        await prefs.setString('user_email', data['email'] ?? email);
 
         final loginResponse = await _authService.login(email, password);
         final loginData = jsonDecode(loginResponse.body);
@@ -89,10 +89,10 @@ class AuthController {
         );
 
         // ✅ Redirect to profession overlay after signup
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => ProfessionSelectionOverlay()),
-        );
+        Navigator.push(
+  context,
+  MaterialPageRoute(builder: (_) => const ProfessionSelectionOverlay()),
+);
       }else if (response.statusCode == 409) {
   ScaffoldMessenger.of(context).showSnackBar(
     const SnackBar(content: Text('Email already registered!')),
@@ -123,13 +123,51 @@ class AuthController {
 
   // ---------------- USER DETAILS ----------------
   Future<Map<String, dynamic>> getUserDetails() async {
+  final prefs = await SharedPreferences.getInstance();
+  return {
+    'name': prefs.getString('user_name') ?? '',
+    'email': prefs.getString('user_email') ?? '',
+    'token': prefs.getString('auth_token') ?? '',
+    'userId': prefs.getString('user_id') ?? '',
+    'profession': prefs.getString('profession') ?? '',
+  };
+}
+
+Future<void> saveProfession(BuildContext context, String profession) async {
+  try {
     final prefs = await SharedPreferences.getInstance();
-    return {
-      'name': prefs.getString('name') ?? '',
-      'email': prefs.getString('email') ?? '',
-      'token': prefs.getString('auth_token') ?? '',
-      'userId': prefs.getString('userId') ?? '',
-      'profession': prefs.getString('profession') ?? '',
-    };
+    final token = prefs.getString('auth_token') ?? '';
+
+    final response = await _authService.postRequest(
+      '/saveProfession',
+      {'profession': profession},
+      token: token,
+    );
+
+    if (response['success'] == true ||
+        response['message']?.toString().toLowerCase().contains('saved') == true) {
+      // ✅ Save locally too
+      await prefs.setString('profession', profession);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profession saved successfully!')),
+      );
+
+      // Navigate to home after saving
+      if (!context.mounted) return;
+      Navigator.pushReplacementNamed(context, 'home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response['message'] ?? 'Failed to save profession')),
+      );
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error saving profession: $e')),
+    );
   }
+}
+
+
 }

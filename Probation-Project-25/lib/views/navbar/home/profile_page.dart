@@ -16,6 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String phone = "";
   String gender = "";
   String age = "";
+  String profession = "";
 
   bool isEditing = false;
 
@@ -39,22 +40,24 @@ class _ProfilePageState extends State<ProfilePage> {
 
   
   Future<void> _loadUserData() async {
-    final auth = AuthController();
-    final userData = await auth.getUserDetails();
-    final prefs = await SharedPreferences.getInstance();
+  final prefs = await SharedPreferences.getInstance();
+  final auth = AuthController();
+  final userData = await auth.getUserDetails();
 
-    setState(() {
-      name = userData['name'] ?? "User";
-      email = userData['email'] ?? "example@gmail.com";
-      phone = prefs.getString('phone') ?? "";
-      gender = prefs.getString('gender') ?? "";
-      age = prefs.getString('age') ?? "";
-    });
+  setState(() {
+    name = userData['name'] ?? prefs.getString('user_name') ?? "User";
+    email = userData['email'] ?? prefs.getString('user_email') ?? "example@gmail.com";
+    phone = prefs.getString('phone') ?? "";
+    gender = prefs.getString('gender') ?? "";
+    age = prefs.getString('age') ?? "";
+    profession = userData['profession'] ?? "";
+  });
 
-    phoneController.text = phone;
-    genderController.text = gender;
-    ageController.text = age;
-  }
+  phoneController.text = phone;
+  genderController.text = gender;
+  ageController.text = age;
+}
+
 
   Future<void> _saveProfile() async {
   final auth = AuthController();
@@ -220,6 +223,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   _buildInfoRow("Phone No", phone, phoneController),
                   _buildInfoRow("Gender", gender, genderController),
                   _buildInfoRow("Age", age, ageController),
+                  _buildInfoRow("Profession", profession, null, isEditable: false),
+
                 ],
               ),
             ),
