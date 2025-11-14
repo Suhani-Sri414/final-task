@@ -143,13 +143,13 @@ class _StatsPageState extends State<StatsPage> {
         ),
         const SizedBox(height: 8),
         LinearProgressIndicator(
-          value: (_quizScore.clamp(0.0, 100.0)) / 100, // convert 0–100 to 0–1
+          value: (_quizScore.clamp(0.0, 100.0)) / 100, 
           backgroundColor: Colors.grey.shade300,
           color: Colors.teal,
-          minHeight: 8, // optional — makes it thicker
+          minHeight: 8, 
           borderRadius: BorderRadius.circular(
             10,
-          ), // optional — gives rounded look (Flutter 3.7+)
+          ), 
         ),
       ],
     );

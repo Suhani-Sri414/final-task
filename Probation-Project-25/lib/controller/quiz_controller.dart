@@ -16,30 +16,29 @@ class QuizController with ChangeNotifier {
   QuizQuestion get currentQuestion => _questions[_currentIndex];
   Map<String, String> get userAnswers => _userAnswers;
 
-  /// ✅ Load quiz dynamically (auto-detects profession)
+  
   Future<void> loadQuiz() async {
-  isLoading = true;
-  notifyListeners();
-
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    final profession = prefs.getString('profession') ?? 'student';
-    debugPrint('👤 Loading quiz for: $profession');
-
-    _questions = await _quizService.fetchQuiz(profession);
-
-    debugPrint('✅ Loaded ${_questions.length} questions');
-  } catch (e) {
-    debugPrint('❌ Error loading quiz: $e');
-    _questions = [];
-  } finally {
-    isLoading = false;
+    isLoading = true;
     notifyListeners();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final profession = prefs.getString('profession') ?? 'student';
+      debugPrint('Loading quiz for: $profession');
+
+      _questions = await _quizService.fetchQuiz(profession); 
+
+
+      debugPrint('Loaded ${_questions.length} questions');
+    } catch (e) {
+      debugPrint('Error loading quiz: $e');
+      _questions = [];
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
-}
 
-
-  /// ✅ Handle answer selection
   void answerQuestion(String questionId, String answer) {
     _userAnswers[questionId] = answer;
     notifyListeners();
@@ -59,72 +58,90 @@ class QuizController with ChangeNotifier {
     }
   }
 
-  /// ✅ Submit quiz dynamically based on saved profession
   Future<void> submitQuiz(BuildContext context) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final profession = prefs.getString('profession') ?? 'student';
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final profession = prefs.getString('profession') ?? 'student';
 
-      // Convert user answers for backend format
-      final formattedAnswers = _userAnswers.entries
-          .map((e) => {'questionId': e.key, 'answer': e.value})
-          .toList();
+    
+    final formattedAnswers = _userAnswers.entries
+        .map((e) => {
+              'questionId': int.tryParse(e.key.toString()) ?? e.key,
+              'answer': e.value,
+            })
+        .toList();
 
-      debugPrint('📤 Submitting ${formattedAnswers.length} answers for $profession');
+    debugPrint('Submitting ${formattedAnswers.length} answers for $profession');
 
-      final result = await _quizService.submitQuiz(formattedAnswers, profession);
+    
+    final result = await _quizService.submitQuiz(formattedAnswers, profession);
 
-      debugPrint('✅ Quiz submitted successfully → $result');
+    debugPrint('Quiz submitted successfully → $result');
+    final res = result['result'] ?? {};
+    debugPrint('Passing to result screen → $res');
 
-      if (!context.mounted) return;
+    if (!context.mounted) return;
 
-      Navigator.pushReplacementNamed(
-        context,
-        '/quizResult',
-        arguments: result,
+    
+    
+
+    
+    Navigator.pushNamed(
+      context,
+      '/quizResult',
+      arguments: {
+        'prediction': res['prediction'] ?? 'No result available',
+        'confidence': res['probability']?.toString() ?? 'N/A',
+        'stress_score': (res['score'] ?? '0').toString(),
+        'recommendation': res['score_text'] ?? 'No recommendation available',
+      },
+    );
+    debugPrint('Passing to result screen → $res');
+
+  } catch (e) {
+    debugPrint('Error submitting quiz: $e');
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error submitting quiz')),
       );
-    } catch (e, st) {
-      debugPrint('❌ Error submitting quiz: $e\n$st');
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error submitting quiz')),
-        );
-      }
     }
   }
+}
 
-  /// ✅ Fetch quiz result dynamically (auto-selects based on profession)
+
   Future<Map<String, dynamic>> fetchResult() async {
-    try {
-      final result = await _quizService.fetchResult();
+  try {
+    final result = await _quizService.fetchResult();
 
-      if (result['success'] == true) {
-        final res = result['result'] ?? result;
+    if (result['success'] == true) {
+      
+      final res = result['result'] ?? result;
 
-        final score = (res['stress_score'] ?? res['score'] ?? 0).toDouble();
-        await saveQuizScore(score);
+      final score = (res['score'] ?? 0).toDouble();
+      await saveQuizScore(score);
 
-        debugPrint('💾 Quiz score saved: $score');
+      debugPrint('Quiz score saved: $score');
 
-        return {
-          'success': true,
-          'prediction': res['prediction'] ?? 'No prediction',
-          'stress_level': res['stress_level'] ?? '',
-          'confidence': res['confidence'] ?? '',
-          'stress_score': res['stress_score'] ?? '',
-          'recommendation':
-              res['recommendation'] ?? res['score_text'] ?? 'No data available',
-        };
-      } else {
-        return {'success': false, 'message': 'Invalid response'};
-      }
-    } catch (e, st) {
-      debugPrint('❌ Error fetching result: $e\n$st');
-      return {'success': false, 'message': 'Failed to fetch result'};
+      return {
+        'success': true,
+        'prediction': res['prediction'] ?? 'No prediction available',
+        'confidence': (res['probability'] ?? 'N/A').toString(),
+        'stress_score': score.toString(),
+        'recommendation': res['score_text'] ??
+            res['recommendation'] ??
+            'No recommendation available',
+      };
+    } else {
+      return {'success': false, 'message': 'Invalid response'};
     }
+  } catch (e, st) {
+    debugPrint('Error fetching result: $e\n$st');
+    return {'success': false, 'message': 'Failed to fetch result'};
   }
+}
 
-  /// ✅ Save and Load Quiz Score
+
+
   Future<void> saveQuizScore(double score) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('quiz_score', score);

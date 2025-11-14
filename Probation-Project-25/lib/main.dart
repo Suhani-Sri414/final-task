@@ -45,7 +45,7 @@ class MindEaseApp extends StatelessWidget {
         'profession_selection_overlay': (context) =>  ProfessionSelectionOverlay(),
         'home': (context) => const HomePage(),
         'quizz': (context) => const QuizPage(),
-        'quizz_result': (context) =>  QuizResultPage(),
+        '/quizResult': (context) =>  QuizResultPage(),
         'journal': (context) => JournalPage(controller: StatsController(name: "User", quizScore: 0)),
         'meditation': (context) => const MeditationPage(),
         'ai_therapist': (context) => const ChatbotPage(),

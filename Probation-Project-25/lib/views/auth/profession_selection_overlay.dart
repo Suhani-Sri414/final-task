@@ -15,7 +15,7 @@ class _ProfessionSelectionOverlayState
   Future<void> _saveProfession(String profession) async {
     final authController = AuthController();
 
-    // Show loader
+    
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -25,9 +25,9 @@ class _ProfessionSelectionOverlayState
     await authController.saveProfession(context, profession);
 
     if (!mounted) return;
-    Navigator.pop(context); // close loader
+    Navigator.pop(context); 
 
-    // Navigate to home after saving
+    
     Navigator.pushReplacementNamed(context, 'home');
   }
 
@@ -38,7 +38,7 @@ class _ProfessionSelectionOverlayState
     return Stack(
       fit: StackFit.expand,
       children: [
-        // ✅ Blurred background only — no black overlay
+        
         BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
           child: Container(
@@ -46,7 +46,7 @@ class _ProfessionSelectionOverlayState
           ),
         ),
 
-        // ✅ Foreground content
+        
         Center(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -56,19 +56,19 @@ class _ProfessionSelectionOverlayState
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // 👨‍⚕️ Doctor image
+                    
                     Image.asset(
                       'assets/images/doctor.jpeg',
-                      height: screenWidth * 0.38, // slightly smaller
+                      height: screenWidth * 0.38, 
                       fit: BoxFit.contain,
                     ),
 
-                    // ☁️ Cloud bubble
+                    
                     Transform.translate(
                       offset: const Offset(-25, -15),
                       child: Container(
-                        width: screenWidth * 0.6, // smaller width
-                        height: screenWidth * 0.32, // smaller height
+                        width: screenWidth * 0.6, 
+                        height: screenWidth * 0.35, 
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage('assets/images/cloud.jpeg'),
@@ -78,7 +78,7 @@ class _ProfessionSelectionOverlayState
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
-                            vertical: 28,
+                            vertical: 20,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -87,14 +87,14 @@ class _ProfessionSelectionOverlayState
                                 "Tell us your profession\nso we can help you better.",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
                                 ),
                               ),
                               const SizedBox(height: 10),
 
-                              // ✅ Button Row (smaller + balanced)
+                              
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -104,7 +104,7 @@ class _ProfessionSelectionOverlayState
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 4),
                                       minimumSize:
-                                          const Size(70, 26), // smaller buttons
+                                          const Size(70, 26), 
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),

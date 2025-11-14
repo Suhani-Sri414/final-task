@@ -21,14 +21,14 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     return Consumer<QuizController>(
       builder: (context, controller, child) {
-        // 🌀 Loading state
+        
         if (controller.isLoading) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // ❌ If no quiz available
+        
         if (controller.questions.isEmpty) {
           return const Scaffold(
             body: Center(child: Text("No quiz available")),
@@ -53,7 +53,7 @@ class _QuizPageState extends State<QuizPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // ✅ Header
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -75,7 +75,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
                 const SizedBox(height: 8),
 
-                // ✅ Progress bar
+                
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
@@ -88,7 +88,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
                 const SizedBox(height: 30),
 
-                // ✅ Question box
+                
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -114,7 +114,7 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                       const SizedBox(height: 20),
 
-                      // ✅ Options or Input
+                      
                       if (question.options.isNotEmpty)
                         ...question.options.map(
                           (option) => RadioListTile(
@@ -151,7 +151,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
                 const SizedBox(height: 30),
 
-                // ✅ Navigation buttons
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -169,7 +169,7 @@ class _QuizPageState extends State<QuizPage> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        // ✅ Validation: ensure user has selected/entered an answer
+                        
                         final currentAnswer =
                             controller.userAnswers[question.id.toString()] ?? '';
                         if (currentAnswer.isEmpty) {
@@ -187,66 +187,16 @@ class _QuizPageState extends State<QuizPage> {
                             controller.questions.length - 1) {
                           controller.nextQuestion();
                         } else {
-                          // ✅ Submit quiz and fetch result
+                          
                           await controller.submitQuiz(context);
                           final resultData = await controller.fetchResult();
-                          print('🔍 Full Result Data: $resultData');
+                          print('Full Result Data: $resultData');
 
                           if (!mounted) return;
 
-                          final resultText =
-                              resultData['result'] ??
-                              resultData['message'] ??
-                              'No result available';
-                          final confidence =
-                              resultData['confidence']?.toString() ?? 'N/A';
-                          final scoreText = resultData['score_text'] ?? '';
+                          
 
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16)),
-                              title: const Text(
-                                "Mental Health Assessment",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Result: $resultText",
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    "Confidence: $confidence",
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.blueGrey),
-                                  ),
-                                  if (scoreText.isNotEmpty) ...[
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      scoreText,
-                                      style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black54),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text("OK"),
-                                ),
-                              ],
-                            ),
-                          );
+                          
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -267,7 +217,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // ✅ Footer
+                
                 const Text(
                   "Your responses are confidential and will help us provide personalized support.",
                   textAlign: TextAlign.center,

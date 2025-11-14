@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 
 class QuizResultPage extends StatelessWidget {
+  const QuizResultPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final result = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    debugPrint('Received arguments → $args'); 
+    if (args == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text(
+            "No result data received",
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+      );
+    }
+
+    
+    final prediction = args['prediction'] ?? 'No prediction available';
+    final confidence = args['confidence']?.toString() ?? 'N/A';
+    final score = args['stress_score']?.toString() ?? '0';
+    final recommendation =
+        args['recommendation'] ?? 'No recommendation available';
 
     return Scaffold(
       appBar: AppBar(
@@ -15,22 +38,35 @@ class QuizResultPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("🧠 Stress Level: ${result['stress_level']}", 
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 15),
-            Text("📊 Stress Score: ${result['stress_score'].toStringAsFixed(2)}", 
-                style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 15),
-            const Text("Confidence Levels:", 
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text("• Low: ${(result['confidence']['low'] * 100).toStringAsFixed(1)}%"),
-            Text("• Moderate: ${(result['confidence']['moderate'] * 100).toStringAsFixed(1)}%"),
-            Text("• High: ${(result['confidence']['high'] * 100).toStringAsFixed(1)}%"),
-            const SizedBox(height: 25),
-            Text("💡 Recommendation:",
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              "Prediction:",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
-            Text(result['recommendation'], style: const TextStyle(fontSize: 16)),
+            Text(prediction, style: const TextStyle(fontSize: 18)),
+
+            const SizedBox(height: 20),
+            Text(
+              "Stress Score: $score",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+
+            const SizedBox(height: 15),
+            Text(
+              "Confidence: $confidence",
+              style: const TextStyle(fontSize: 18, color: Colors.blueGrey),
+            ),
+
+            const SizedBox(height: 25),
+            Text(
+              "Recommendation:",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              recommendation,
+              style: const TextStyle(fontSize: 16),
+            ),
           ],
         ),
       ),

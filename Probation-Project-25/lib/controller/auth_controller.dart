@@ -9,7 +9,7 @@ import '../services/api/auth_service.dart';
 class AuthController {
   final AuthService _authService = AuthService();
 
-  // ---------------- LOGIN ----------------
+  // LOGIN 
   Future<void> login(BuildContext context, String email, String password) async {
     try {
       final response = await _authService.login(email, password);
@@ -21,6 +21,7 @@ class AuthController {
         final prefs = await SharedPreferences.getInstance();
 
         await prefs.setString('auth_token', token);
+        print('Token saved: ${data['accessToken']}');
         await prefs.setString('user_name', user['name'] ?? '');
         await prefs.setString('user_email', user['email'] ?? '');
         await prefs.setString('user_id', user['id'] ?? '');
@@ -31,16 +32,16 @@ class AuthController {
           SnackBar(content: Text('Welcome back, ${user['name']}!')),
         );
 
-        // ✅ Check if profession already saved
+        
         final profession = prefs.getString('profession');
         if (profession == null || profession.isEmpty) {
-          // Navigate to profession overlay
+          
           Navigator.push(
   context,
   MaterialPageRoute(builder: (_) => const ProfessionSelectionOverlay()),
 );
         } else {
-          // Go directly to home
+          
           Navigator.pushReplacementNamed(context, 'home');
         }
       } else {
@@ -56,7 +57,7 @@ class AuthController {
     }
   }
 
-  // ---------------- SIGNUP ----------------
+  //  SIGNUP 
   Future<void> signup(BuildContext context, String name, String email, String password) async {
     try {
       final response = await _authService.signup(name, email, password);
@@ -88,7 +89,7 @@ class AuthController {
           const SnackBar(content: Text('Account created successfully!')),
         );
 
-        // ✅ Redirect to profession overlay after signup
+        
         Navigator.push(
   context,
   MaterialPageRoute(builder: (_) => const ProfessionSelectionOverlay()),
@@ -111,7 +112,7 @@ class AuthController {
     }
   }
 
-  // ---------------- LOGOUT ----------------
+  // LOGOUT
   Future<void> logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
@@ -121,7 +122,7 @@ class AuthController {
     Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
   }
 
-  // ---------------- USER DETAILS ----------------
+  //USER DETAILS 
   Future<Map<String, dynamic>> getUserDetails() async {
   final prefs = await SharedPreferences.getInstance();
   return {
@@ -146,14 +147,14 @@ Future<void> saveProfession(BuildContext context, String profession) async {
 
     if (response['success'] == true ||
         response['message']?.toString().toLowerCase().contains('saved') == true) {
-      // ✅ Save locally too
+      
       await prefs.setString('profession', profession);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Profession saved successfully!')),
       );
 
-      // Navigate to home after saving
+      
       if (!context.mounted) return;
       Navigator.pushReplacementNamed(context, 'home');
     } else {
