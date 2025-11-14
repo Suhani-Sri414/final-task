@@ -5,11 +5,11 @@ class QuizResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-    debugPrint('Received arguments → $args'); 
+    debugPrint('Received arguments → $args');
+
     if (args == null) {
       return const Scaffold(
         body: Center(
@@ -21,51 +21,88 @@ class QuizResultPage extends StatelessWidget {
       );
     }
 
-    
     final prediction = args['prediction'] ?? 'No prediction available';
     final confidence = args['confidence']?.toString() ?? 'N/A';
     final score = args['stress_score']?.toString() ?? '0';
     final recommendation =
         args['recommendation'] ?? 'No recommendation available';
 
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+    final t = MediaQuery.of(context).textScaleFactor;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Quiz Result"),
+        title: Text(
+          "Quiz Result",
+          style: TextStyle(fontSize: 18 * t, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.teal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
+
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(w * 0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Prediction title
             Text(
               "Prediction:",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20 * t,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(prediction, style: const TextStyle(fontSize: 18)),
+            SizedBox(height: h * 0.01),
 
-            const SizedBox(height: 20),
+            // Prediction text (wrapped for small screens)
+            Text(
+              prediction,
+              style: TextStyle(fontSize: 18 * t),
+            ),
+
+            SizedBox(height: h * 0.03),
+
+            // Stress Score
             Text(
               "Stress Score: $score",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 18 * t,
+                fontWeight: FontWeight.w500,
+              ),
             ),
 
-            const SizedBox(height: 15),
+            SizedBox(height: h * 0.02),
+
+            // Confidence
             Text(
               "Confidence: $confidence",
-              style: const TextStyle(fontSize: 18, color: Colors.blueGrey),
+              style: TextStyle(
+                fontSize: 18 * t,
+                color: Colors.blueGrey,
+              ),
             ),
 
-            const SizedBox(height: 25),
+            SizedBox(height: h * 0.03),
+
+            // Recommendation title
             Text(
               "Recommendation:",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18 * t,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 8),
+
+            SizedBox(height: h * 0.01),
+
+            // Wrapped recommendation text
             Text(
               recommendation,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontSize: 16 * t,
+                height: 1.4,
+              ),
             ),
           ],
         ),

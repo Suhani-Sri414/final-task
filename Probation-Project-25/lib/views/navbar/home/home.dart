@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mind_ease_app/controller/stats_controller.dart';
-
 import 'package:mind_ease_app/views/navbar/home/profile_page.dart';
 import 'package:mind_ease_app/views/navbar/home/quizz.dart';
 import 'package:mind_ease_app/views/navbar/stats.dart';
@@ -20,7 +20,6 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey _featuresKey = GlobalKey();
   final StatsController controller = StatsController(name: "User", quizScore: 0);
 
-
   late final List<Widget> _pages;
 
   @override
@@ -31,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       JournalPage(controller: controller),
       const MeditationPage(),
       const ChatbotPage(),
-      const StatsPage(userName: 'widget.userName', quizScore: 82,),
+      const StatsPage(userName: 'widget.userName', quizScore: 82),
     ];
   }
 
@@ -49,37 +48,38 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color.fromARGB(255, 237, 228, 198),
         elevation: 1,
         title: Row(
-          children: const [
+          children: [
             Text(
               "Mind",
               style: TextStyle(
-                color: Color.fromARGB(255, 31, 58, 95),
+                color: const Color.fromARGB(255, 31, 58, 95),
                 fontWeight: FontWeight.bold,
-                fontSize: 22,
+                fontSize: 22.sp,
               ),
             ),
             Text(
               "Ease",
               style: TextStyle(
-                color: Color.fromARGB(255, 33, 150, 84),
+                color: const Color.fromARGB(255, 33, 150, 84),
                 fontWeight: FontWeight.bold,
-                fontSize: 22,
+                fontSize: 22.sp,
               ),
             ),
           ],
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 20),
+            padding: EdgeInsets.only(right: 20.w),
             child: InkWell(
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const ProfilePage()));
               },
-              borderRadius: BorderRadius.circular(25),
-              child: const CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 33, 150, 84),
-                child: Icon(Icons.person, color: Colors.white),
+              borderRadius: BorderRadius.circular(25.r),
+              child: CircleAvatar(
+                backgroundColor: const Color.fromARGB(255, 33, 150, 84),
+                radius: 20.r,
+                child: Icon(Icons.person, color: Colors.white, size: 22.sp),
               ),
             ),
           ),
@@ -91,17 +91,17 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30.h),
                   Center(
                     child: Column(
-                      children: const [
+                      children: [
                         Text(
                           "Your journey to inner peace starts here\nWelcome to your safe place for",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 22.sp,
                             fontWeight: FontWeight.w600,
-                            color: Color.fromARGB(255, 31, 58, 95),
+                            color: const Color.fromARGB(255, 31, 58, 95),
                             height: 1.5,
                           ),
                         ),
@@ -109,96 +109,95 @@ class _HomePageState extends State<HomePage> {
                           "mental peace",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 22.sp,
                             fontWeight: FontWeight.w600,
-                            color: Color.fromARGB(255, 33, 150, 84),
+                            color: const Color.fromARGB(255, 33, 150, 84),
                             height: 1.5,
                           ),
                         ),
-                        SizedBox(height: 15),
+                        SizedBox(height: 15.h),
                         Text(
                           "MindEase provides guided meditations, mood tracking, and a supportive\ncommunity to help you navigate life's challenges with calm and clarity.",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 12.35,
-                            color: Color.fromARGB(255, 31, 58, 95),
+                            fontSize: 12.35.sp,
+                            color: const Color.fromARGB(255, 31, 58, 95),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 25),
+                  SizedBox(height: 25.h),
                   Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Scrollable.ensureVisible(
-                              _featuresKey.currentContext!,
-                              duration: const Duration(seconds: 1),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 33, 150, 84),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 25,
-                              vertical: 12,
-                            ),
-                          ),
-                          child: const Text(
-                            "Explore Features",
-                            style:
-                                TextStyle(color: Color.fromARGB(255, 31, 58, 95)),
-                          ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Scrollable.ensureVisible(
+                          _featuresKey.currentContext!,
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.easeInOut,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 33, 150, 84),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.r),
                         ),
-                      ],
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 25.w,
+                          vertical: 12.h,
+                        ),
+                      ),
+                      child: Text(
+                        "Explore Features",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: const Color.fromARGB(255, 31, 58, 95),
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30.h),
                   Center(
                     child: Column(
-                      children: const [
+                      children: [
                         Text(
                           "Everything you need for",
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 22.sp,
                             fontWeight: FontWeight.w600,
-                            color: Color.fromARGB(255, 31, 58, 95),
+                            color: const Color.fromARGB(255, 31, 58, 95),
                           ),
                         ),
                         Text(
                           "wellness",
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 22.sp,
                             fontWeight: FontWeight.w600,
-                            color: Color.fromARGB(255, 33, 150, 84),
+                            color: const Color.fromARGB(255, 33, 150, 84),
                           ),
                         ),
                         Text(
                           "Comprehensive tools and resources to support your mental health journey",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.w500,
-                            color: Color.fromARGB(255, 31, 58, 95),
+                            color: const Color.fromARGB(255, 31, 58, 95),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 25),
+                  SizedBox(height: 25.h),
+
+                  /// Feature Cards Grid
                   Padding(
                     key: _featuresKey,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: GridView.count(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 5.w,
+                      mainAxisSpacing: 20.h,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
@@ -208,13 +207,8 @@ class _HomePageState extends State<HomePage> {
                           description:
                               "Calm your mind with guided sessions designed to reduce stress and increase focus.",
                           onTap: () {
-                            Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (_) => MeditationPage(),
-  ),
-);
-
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (_) => MeditationPage()));
                           },
                         ),
                         FeatureCard(
@@ -224,28 +218,22 @@ class _HomePageState extends State<HomePage> {
                               "Reflect on your thoughts and track your emotional growth through daily entries",
                           onTap: () {
                             Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (_) => JournalPage(controller: controller),
-  ),
-);
-
-
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => JournalPage(controller: controller)),
+                            );
                           },
                         ),
-                        
-                        
                         FeatureCard(
                           iconPath: 'assets/icons/ai_companion.png',
                           title: "AI Companion",
                           description:
                               "Chat with our AI-powered Therapist for real time emotional support.",
-                              onTap: () {
+                          onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ChatbotPage()));
+                                    builder: (context) => const ChatbotPage()));
                           },
                         ),
                         FeatureCard(
@@ -263,68 +251,65 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+
+                  SizedBox(height: 10.h),
+
+                  /// Bottom image + text sections
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20.w),
                     child: Column(
                       children: [
                         Row(
                           children: [
                             Expanded(
                               flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Your feelings are valid.\nYour journey is important.\nWelcome to your SAFE SPACE.",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900,
-                                      color: Color.fromARGB(255, 31, 58, 95),
-                                    ),
-                                  ),
-                                ],
+                              child: Text(
+                                "Your feelings are valid.\nYour journey is important.\nWelcome to your SAFE SPACE.",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: const Color.fromARGB(255, 31, 58, 95),
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            SizedBox(width: 10.w),
                             Expanded(
                               flex: 1,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: Image(
-                                    image:
-                                        AssetImage('assets/images/homepage2.jpg')),
+                                borderRadius: BorderRadius.circular(15.r),
+                                child: Image.asset(
+                                  'assets/images/homepage2.jpg',
+                                  height: 120.h,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        SizedBox(height: 30.h),
                         Row(
                           children: [
                             Expanded(
                               flex: 1,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: Image(
-                                    image:
-                                        AssetImage('assets/images/homepage1.jpg')),
+                                borderRadius: BorderRadius.circular(15.r),
+                                child: Image.asset(
+                                  'assets/images/homepage1.jpg',
+                                  height: 120.h,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 20),
+                            SizedBox(width: 20.w),
                             Expanded(
                               flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Your trusted companion for Mental Wellbeing. Find peace, build resilience, and connect with a supportive community.",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900,
-                                      color: Color.fromARGB(255, 31, 58, 95),
-                                    ),
-                                  ),
-                                ],
+                              child: Text(
+                                "Your trusted companion for Mental Wellbeing. Find peace, build resilience, and connect with a supportive community.",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: const Color.fromARGB(255, 31, 58, 95),
+                                ),
                               ),
                             ),
                           ],
@@ -338,16 +323,16 @@ class _HomePageState extends State<HomePage> {
           : _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor:  Color.fromARGB(255, 31, 58, 95),
-        selectedItemColor: Color.fromARGB(255, 33, 150, 84),
+        backgroundColor: const Color.fromARGB(255, 31, 58, 95),
+        selectedItemColor: const Color.fromARGB(255, 33, 150, 84),
         unselectedItemColor: Colors.white,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          
           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Journal'),
-          BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Meditation'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.self_improvement), label: 'Meditation'),
           BottomNavigationBarItem(icon: Icon(Icons.smart_toy), label: 'AI Therapist'),
           BottomNavigationBarItem(icon: Icon(Icons.insert_chart), label: 'Stats'),
         ],
@@ -377,36 +362,35 @@ class FeatureCard extends StatelessWidget {
       child: Card(
         color: const Color.fromARGB(255, 253, 247, 231),
         shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        side: const BorderSide(
-          color: Color.fromARGB(255, 31, 58, 95), 
-          width: 1, 
+          borderRadius: BorderRadius.circular(15.r),
+          side: const BorderSide(
+            color: Color.fromARGB(255, 31, 58, 95),
+            width: 1,
+          ),
         ),
-      ),
-        
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(iconPath, height: 40, width: 40, fit: BoxFit.contain),
-              const SizedBox(height: 10),
+              Image.asset(iconPath, height: 40.h, width: 40.w),
+              SizedBox(height: 10.h),
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                  color: Color.fromARGB(255, 31, 58, 95),
+                  fontSize: 13.sp,
+                  color: const Color.fromARGB(255, 31, 58, 95),
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6.h),
               Text(
                 description,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: Color.fromARGB(255, 31, 58, 95),
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  color: const Color.fromARGB(255, 31, 58, 95),
                   height: 1.4,
                 ),
               ),
