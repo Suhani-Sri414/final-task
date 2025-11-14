@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mind_ease_app/controller/auth_controller.dart';
 
 class ProfessionSelectionOverlay extends StatefulWidget {
@@ -15,7 +16,6 @@ class _ProfessionSelectionOverlayState
   Future<void> _saveProfession(String profession) async {
     final authController = AuthController();
 
-    
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -25,9 +25,8 @@ class _ProfessionSelectionOverlayState
     await authController.saveProfession(context, profession);
 
     if (!mounted) return;
-    Navigator.pop(context); 
+    Navigator.pop(context);
 
-    
     Navigator.pushReplacementNamed(context, 'home');
   }
 
@@ -38,7 +37,7 @@ class _ProfessionSelectionOverlayState
     return Stack(
       fit: StackFit.expand,
       children: [
-        
+        /// Background blur
         BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
           child: Container(
@@ -46,7 +45,7 @@ class _ProfessionSelectionOverlayState
           ),
         ),
 
-        
+        /// Center Overlay
         Center(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -54,21 +53,20 @@ class _ProfessionSelectionOverlayState
                 fit: BoxFit.scaleDown,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    
+                    /// Doctor Image
                     Image.asset(
                       'assets/images/doctor.jpeg',
-                      height: screenWidth * 0.38, 
+                      height: screenWidth * 0.38, // responsive
                       fit: BoxFit.contain,
                     ),
 
-                    
+                    /// Cloud Text Box
                     Transform.translate(
-                      offset: const Offset(-25, -15),
+                      offset: Offset(-25.w, -15.h),
                       child: Container(
-                        width: screenWidth * 0.6, 
-                        height: screenWidth * 0.35, 
+                        width: (screenWidth * 0.6).w,
+                        height: (screenWidth * 0.35).h,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage('assets/images/cloud.jpeg'),
@@ -76,66 +74,73 @@ class _ProfessionSelectionOverlayState
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 20,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 20.h,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
+                              Text(
                                 "Tell us your profession\nso we can help you better.",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 8,
+                                  fontSize: 8.sp,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
                                 ),
                               ),
-                              const SizedBox(height: 10),
+                              SizedBox(height: 10.h),
 
-                              
+                              /// Buttons
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.blueAccent,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4),
-                                      minimumSize:
-                                          const Size(70, 26), 
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w,
+                                        vertical: 4.h,
+                                      ),
+                                      minimumSize: Size(70.w, 26.h),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius:
+                                            BorderRadius.circular(8.r),
                                       ),
                                     ),
                                     onPressed: () =>
                                         _saveProfession('Student'),
-                                    child: const Text(
+                                    child: Text(
                                       "Student",
                                       style: TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 10.sp,
                                         color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 6),
+
+                                  SizedBox(width: 6.w),
+
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.teal,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4),
-                                      minimumSize: const Size(95, 26),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w,
+                                        vertical: 4.h,
+                                      ),
+                                      minimumSize: Size(95.w, 26.h),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius:
+                                            BorderRadius.circular(8.r),
                                       ),
                                     ),
                                     onPressed: () => _saveProfession(
                                         'Working Professional'),
-                                    child: const Text(
+                                    child: Text(
                                       "Professional",
                                       style: TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 10.sp,
                                         color: Colors.white,
                                       ),
                                     ),

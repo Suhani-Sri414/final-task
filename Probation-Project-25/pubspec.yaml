@@ -39,6 +39,7 @@ dependencies:
   google_fonts: ^6.2.1
   font_awesome_flutter: ^10.4.0
   percent_indicator: ^4.2.3
+  flutter_screenutil: ^5.9.0
   flutter:
     sdk: flutter
     

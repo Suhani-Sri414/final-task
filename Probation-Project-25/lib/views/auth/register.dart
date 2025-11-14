@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mind_ease_app/controller/auth_controller.dart';
 
 class MyRegister extends StatefulWidget {
@@ -23,67 +24,81 @@ class _MyRegisterState extends State<MyRegister> {
       backgroundColor: const Color.fromARGB(255, 253, 247, 231),
       body: Stack(
         children: [
+          /// Logo
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.only(top: 50),
+              padding: EdgeInsets.only(top: 50.h),
               child: Image.asset(
                 'assets/icons/mindeaselogo.png',
-                height: 300,
-                width: 300,
+                height: 300.h,
+                width: 300.w,
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.only(top: 320, left: 117),
-            child: const Text(
+
+          /// Mind text
+          Positioned(
+            top: 320.h,
+            left: 117.w,
+            child: Text(
               'Mind',
               style: TextStyle(
-                color: Color.fromARGB(255, 31, 58, 95),
-                fontSize: 40,
+                color: const Color.fromARGB(255, 31, 58, 95),
+                fontSize: 40.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.only(top: 320, left: 200),
-            child: const Text(
+
+          /// Ease text
+          Positioned(
+            top: 320.h,
+            left: 200.w,
+            child: Text(
               'Ease',
               style: TextStyle(
-                color: Color.fromARGB(255, 33, 150, 84),
-                fontSize: 40,
+                color: const Color.fromARGB(255, 33, 150, 84),
+                fontSize: 40.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.only(top: 380, left: 160),
-            child: const Text(
+
+          /// Join Us
+          Positioned(
+            top: 380.h,
+            left: 160.w,
+            child: Text(
               'Join Us',
               style: TextStyle(
-                color: Color.fromARGB(255, 31, 58, 95),
-                fontSize: 21,
+                color: const Color.fromARGB(255, 31, 58, 95),
+                fontSize: 21.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
+
+          /// Scrollable Register Form
           SingleChildScrollView(
             padding: EdgeInsets.only(
               top: MediaQuery.of(context).size.height * 0.47,
-              left: 35,
-              right: 35,
+              left: 35.w,
+              right: 35.w,
             ),
             child: Column(
               children: [
-                const Text(
+                Text(
                   'Create your account',
                   style: TextStyle(
-                    color: Color.fromARGB(255, 31, 58, 95),
-                    fontSize: 21,
+                    color: const Color.fromARGB(255, 31, 58, 95),
+                    fontSize: 21.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
+
+                /// Form
                 FormBuilder(
                   key: _formKey,
                   child: Column(
@@ -95,13 +110,12 @@ class _MyRegisterState extends State<MyRegister> {
                           errorText: 'Please enter your name',
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      SizedBox(height: 15.h),
+
                       FormBuilderTextField(
                         name: 'email',
-                        decoration: _inputDecoration(
-                          'Email address',
-                          Icons.email,
-                        ),
+                        decoration:
+                            _inputDecoration('Email address', Icons.email),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(
                             errorText: 'Please enter your email',
@@ -118,7 +132,8 @@ class _MyRegisterState extends State<MyRegister> {
                           },
                         ]),
                       ),
-                      const SizedBox(height: 15),
+                      SizedBox(height: 15.h),
+
                       FormBuilderTextField(
                         name: 'password',
                         obscureText: !_isPasswordVisible,
@@ -156,7 +171,8 @@ class _MyRegisterState extends State<MyRegister> {
                           ),
                         ]),
                       ),
-                      const SizedBox(height: 15),
+                      SizedBox(height: 15.h),
+
                       FormBuilderTextField(
                         name: 'confirm_password',
                         obscureText: !_isConfirmPasswordVisible,
@@ -179,12 +195,12 @@ class _MyRegisterState extends State<MyRegister> {
                           ),
                         ),
                         validator: (val) {
-                          final password =
+                          final pw =
                               _formKey.currentState?.fields['password']?.value;
                           if (val == null || val.isEmpty) {
                             return 'Please confirm your password';
                           }
-                          if (val != password) {
+                          if (val != pw) {
                             return 'Passwords do not match';
                           }
                           return null;
@@ -193,7 +209,10 @@ class _MyRegisterState extends State<MyRegister> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 25),
+
+                SizedBox(height: 25.h),
+
+                /// Sign Up button
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState?.saveAndValidate() ?? false) {
@@ -208,36 +227,47 @@ class _MyRegisterState extends State<MyRegister> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 33, 150, 84),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 130,
-                      vertical: 13,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 130.w,
+                      vertical: 13.h,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Sign Up',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.sp,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 15),
+
+                SizedBox(height: 15.h),
+
+                /// Login text
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Already have an account? "),
+                    Text(
+                      "Already have an account? ",
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
                     GestureDetector(
                       onTap: () => Navigator.pushNamed(context, 'login'),
-                      child: const Text(
+                      child: Text(
                         "Login here",
                         style: TextStyle(
-                          color: Color.fromARGB(255, 33, 150, 84),
+                          color: const Color.fromARGB(255, 33, 150, 84),
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
+                SizedBox(height: 20.h),
               ],
             ),
           ),
@@ -252,12 +282,16 @@ class _MyRegisterState extends State<MyRegister> {
     Widget? suffix,
   }) {
     return InputDecoration(
-      prefixIcon: Icon(icon, color: const Color.fromARGB(255, 31, 58, 95)),
+      prefixIcon:
+          Icon(icon, color: const Color.fromARGB(255, 31, 58, 95), size: 22.sp),
       suffixIcon: suffix,
       hintText: hint,
-      fillColor: Colors.white,
+      hintStyle: TextStyle(fontSize: 14.sp),
       filled: true,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.r),
+      ),
     );
   }
 }
