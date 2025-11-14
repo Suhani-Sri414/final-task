@@ -52,9 +52,19 @@ class AuthController {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMsg)));
       }
     } catch (e) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
-    }
+  if (!context.mounted) return;
+
+  String message = "Something went wrong. Please try again.";
+
+  if (e.toString().contains("SocketException") ||
+      e.toString().contains("Failed host lookup")) {
+    message = "Unable to connect to the server. Please try again later.";
+  }
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
+}
   }
 
   //  SIGNUP 
@@ -107,9 +117,19 @@ class AuthController {
         );
       }
     } catch (e) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
-    }
+  if (!context.mounted) return;
+
+  String message = "Something went wrong. Please try again.";
+
+  if (e.toString().contains("SocketException") ||
+      e.toString().contains("Failed host lookup")) {
+    message = "Unable to connect to the server. Please try again later.";
+  }
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
+}
   }
 
   // LOGOUT
