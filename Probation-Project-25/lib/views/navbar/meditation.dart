@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mind_ease_app/controller/stats_controller.dart'; 
+import 'package:mind_ease_app/controller/stats_controller.dart';
 
 class MeditationPage extends StatefulWidget {
   const MeditationPage({super.key});
@@ -19,7 +19,7 @@ class _MeditationPageState extends State<MeditationPage> {
   @override
   void initState() {
     super.initState();
-    controller = StatsController(name: "User", quizScore: 0); 
+    controller = StatsController(name: "User", quizScore: 0);
     controller.loadData();
   }
 
@@ -67,59 +67,96 @@ class _MeditationPageState extends State<MeditationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final textScale = MediaQuery.of(context).textScaler.scale(1.0);
+
+    final padding = width * 0.05;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 253, 247, 231),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(padding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
+            Center(
               child: Text(
                 "Guided meditations for mental wellness",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 31, 58, 95),fontSize: 22,fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 31, 58, 95),
+                  fontSize: 22 * textScale,
+                  fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 10),
-            const Text(
+
+            SizedBox(height: height * 0.015),
+
+            Text(
               "You don't have to face this alone. These specially designed meditations are here to support you through difficult times.",
               style: TextStyle(
-                color: Color.fromARGB(255, 31, 58, 95), fontSize: 12
+                color: const Color.fromARGB(255, 31, 58, 95),
+                fontSize: 12 * textScale,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+
+            SizedBox(height: height * 0.03),
+
             Center(
               child: Column(
                 children: [
                   Text(
                     _formatTime(_seconds),
-                    style: const TextStyle(
-                      fontSize: 32,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 33, 150, 84),
+                    style: TextStyle(
+                      fontSize: 32 * textScale,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 33, 150, 84),
                     ),
                   ),
-                  const SizedBox(height: 10),
+
+                  SizedBox(height: height * 0.01),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton.icon(
                         onPressed: _isMeditating ? null : _startTimer,
                         icon: const Icon(Icons.play_arrow),
-                        label: const Text("Start"),
+                        label: Text(
+                          "Start",
+                          style: TextStyle(fontSize: 14 * textScale),
+                        ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:const Color.fromARGB(255, 33, 150, 84),foregroundColor: Colors.white,
+                          backgroundColor:
+                              const Color.fromARGB(255, 33, 150, 84),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.06,
+                            vertical: height * 0.012,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+
+                      SizedBox(width: width * 0.03),
+
                       ElevatedButton.icon(
                         onPressed: _isMeditating ? _stopTimer : null,
                         icon: const Icon(Icons.stop),
-                        label: const Text("Stop"),
+                        label: Text(
+                          "Stop",
+                          style: TextStyle(fontSize: 14 * textScale),
+                        ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:const Color.fromARGB(255, 220, 80, 60),foregroundColor: Colors.white,
+                          backgroundColor:
+                              const Color.fromARGB(255, 220, 80, 60),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.06,
+                            vertical: height * 0.012,
+                          ),
                         ),
                       ),
                     ],
@@ -127,57 +164,69 @@ class _MeditationPageState extends State<MeditationPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 25),
-            const Text(
+
+            SizedBox(height: height * 0.035),
+
+            Text(
               "Choose your practice",
               style: TextStyle(
-                color: Color.fromARGB(255, 31, 58, 95),fontSize: 17,fontWeight: FontWeight.bold
+                color: const Color.fromARGB(255, 31, 58, 95),
+                fontSize: 17 * textScale,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 15),
+
+            SizedBox(height: height * 0.02),
+
             GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
+              crossAxisCount: width > 600 ? 3 : 2, // Responsive grid
+              crossAxisSpacing: width * 0.03,
+              mainAxisSpacing: width * 0.03,
               shrinkWrap: true,
+              childAspectRatio: width > 600 ? 0.85 : 0.6,
               physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 0.6,
               children: [
                 meditationCard(
-                 title: "Loving-Kindness (Metta)",
-                 description:"Cultivates self-compassion and kindness towards yourself.",
-                 imagePath: "assets/images/m1.png",
-                 url: "https://www.youtube.com/embed/-d_AA9H4z9U"
+                  title: "Loving-Kindness (Metta)",
+                  description:
+                      "Cultivates self-compassion and kindness towards yourself.",
+                  imagePath: "assets/images/m1.png",
+                  url: "https://www.youtube.com/embed/-d_AA9H4z9U",
                 ),
                 meditationCard(
-                 title: "Breathing for Calm",
-                 description:"Breathing techniques to centre yourself and find relief.",
-                 imagePath: "assets/images/m2.png",
-                 url: "https://www.youtube.com/embed/VUjiXcfKBn8"
+                  title: "Breathing for Calm",
+                  description:
+                      "Breathing techniques to centre yourself and find relief.",
+                  imagePath: "assets/images/m2.png",
+                  url: "https://www.youtube.com/embed/VUjiXcfKBn8",
                 ),
                 meditationCard(
-                 title: "Body Scan for Depression",
-                 description:"Reconnect with your body and release tension.",
-                 imagePath: "assets/images/m3.png",
-                 url: "https://www.youtube.com/embed/_DTmGtznab4"
+                  title: "Body Scan for Depression",
+                  description:
+                      "Reconnect with your body and release tension.",
+                  imagePath: "assets/images/m3.png",
+                  url: "https://www.youtube.com/embed/_DTmGtznab4",
                 ),
                 meditationCard(
-                 title: "Anxiety Relief Meditation",
-                 description:"Calm anxious thoughts and bring peace to your mind.",
-                 imagePath: "assets/images/m4.png",
-                 url: "https://www.youtube.com/embed/O-6f5wQXSu8"
+                  title: "Anxiety Relief Meditation",
+                  description:
+                      "Calm anxious thoughts and bring peace to your mind.",
+                  imagePath: "assets/images/m4.png",
+                  url: "https://www.youtube.com/embed/O-6f5wQXSu8",
                 ),
                 meditationCard(
-                 title: "Sleep Meditation",
-                 description:"Gentle guidance to help you let go of the day's worries and drift into peaceful, restorative sleep.\n\nBenefits:\n• Improves sleep quality\n• Eases insomnia\n• Calms nighttime anxiety",
-                 imagePath: "assets/images/m5.png",
-                 url: "https://www.youtube.com/embed/g0jfhRcXtLQ",
+                  title: "Sleep Meditation",
+                  description:
+                      "Gentle guidance to help you let go of the day's worries and drift into peaceful, restorative sleep.\n\nBenefits:\n• Improves sleep quality\n• Eases insomnia\n• Calms nighttime anxiety",
+                  imagePath: "assets/images/m5.png",
+                  url: "https://www.youtube.com/embed/g0jfhRcXtLQ",
                 ),
                 meditationCard(
-                 title: "Mindful Walking",
-                 description:"A moving meditation that combines gentle movement with mindfulness.\n\nBenefits:\n• Includes movement\n• Boosts mood naturally\n• Great for restless energy",
-                 imagePath: "assets/images/m6.png",
-                 url: "https://www.youtube.com/embed/NfPBlRE4RIc",
+                  title: "Mindful Walking",
+                  description:
+                      "A moving meditation that combines gentle movement with mindfulness.\n\nBenefits:\n• Includes movement\n• Boosts mood naturally\n• Great for restless energy",
+                  imagePath: "assets/images/m6.png",
+                  url: "https://www.youtube.com/embed/NfPBlRE4RIc",
                 ),
               ],
             ),
@@ -186,12 +235,16 @@ class _MeditationPageState extends State<MeditationPage> {
       ),
     );
   }
+
   Widget meditationCard({
     required String title,
     required String description,
     required String imagePath,
     required String url,
   }) {
+    final width = MediaQuery.of(context).size.width;
+    final textScale = MediaQuery.of(context).textScaler.scale(1.0);
+
     return GestureDetector(
       onTap: () {
         _launchURL(url);
@@ -200,43 +253,67 @@ class _MeditationPageState extends State<MeditationPage> {
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(width * 0.03),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
                 child: Image.asset(
-                  imagePath,height: 100,width: double.infinity,fit: BoxFit.cover,
+                  imagePath,
+                  height: width * 0.25,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(height: 8),
+
+              SizedBox(height: width * 0.02),
+
               Text(
-               title,
-               style: const TextStyle(
-                 color: Color.fromARGB(255, 31, 58, 95),fontWeight: FontWeight.bold,fontSize: 15
-                )
+                title,
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 31, 58, 95),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15 * textScale,
+                ),
               ),
-              const SizedBox(height: 4),
+
+              SizedBox(height: width * 0.015),
+
               Expanded(
                 child: Text(
                   description,
-                  style: const TextStyle(
-                    fontSize: 12,color: Color.fromARGB(255, 31, 58, 95),
+                  style: TextStyle(
+                    fontSize: 12 * textScale,
+                    color: const Color.fromARGB(255, 31, 58, 95),
                   ),
                 ),
               ),
-              const SizedBox(height: 6),
-              ElevatedButton(
-                onPressed: () {
-                  _launchURL(url);
-                  _startTimer();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 33, 150, 84),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-                child: const Text("Start Session",
-                 style: TextStyle(color: Colors.white, fontSize: 12)
+
+              SizedBox(height: width * 0.02),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _launchURL(url);
+                    _startTimer();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 33, 150, 84),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      vertical: width * 0.02,
+                    ),
+                  ),
+                  child: Text(
+                    "Start Session",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12 * textScale,
+                    ),
+                  ),
                 ),
               ),
             ],

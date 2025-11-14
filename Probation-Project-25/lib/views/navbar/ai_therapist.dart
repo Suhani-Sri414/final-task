@@ -65,7 +65,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
       _messages.add({
         'sender': 'bot',
         'text':
-          'Hey, this is your AI therapist. Here to chat with you and make you feel better.',
+            'Hey, this is your AI therapist. Here to chat with you and make you feel better.',
       });
     });
     _saveMessages();
@@ -120,6 +120,9 @@ class _ChatbotPageState extends State<ChatbotPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final maxBubbleWidth = width * 0.70; // ✅ 70% Responsive width
+
     return Scaffold(
       backgroundColor: creamColor,
       appBar: PreferredSize(
@@ -128,7 +131,8 @@ class _ChatbotPageState extends State<ChatbotPage> {
           decoration: const BoxDecoration(
             color: darkBlue,
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),bottomRight: Radius.circular(40),
+              bottomLeft: Radius.circular(40),
+              bottomRight: Radius.circular(40),
             ),
           ),
           child: const Center(
@@ -137,7 +141,9 @@ class _ChatbotPageState extends State<ChatbotPage> {
               child: Text(
                 'AI Therapist-Chat Bot',
                 style: TextStyle(
-                  color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -155,14 +161,23 @@ class _ChatbotPageState extends State<ChatbotPage> {
                 itemBuilder: (context, index) {
                   final msg = _messages[index];
                   final isUser = msg['sender'] == 'user';
+
                   return Align(
                     alignment: isUser
-                     ? Alignment.centerRight
-                     : Alignment.centerLeft,
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 6),
-                      padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 10),
-                      constraints: const BoxConstraints(maxWidth: 300),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
+
+                      // 🔥 RESPONSIVE width
+                      constraints: BoxConstraints(
+                        maxWidth: maxBubbleWidth,
+                      ),
+
                       decoration: BoxDecoration(
                         color: isUser ? greenColor : greyBubble,
                         borderRadius: BorderRadius.circular(12),
@@ -170,7 +185,9 @@ class _ChatbotPageState extends State<ChatbotPage> {
                       child: Text(
                         msg['text'] ?? '',
                         style: TextStyle(
-                          color: isUser ? Colors.white : Colors.black87,fontSize: 15,
+                          color:
+                              isUser ? Colors.white : Colors.black87,
+                          fontSize: 15,
                         ),
                       ),
                     ),
@@ -178,20 +195,29 @@ class _ChatbotPageState extends State<ChatbotPage> {
                 },
               ),
             ),
+
             if (_isLoading)
               const Padding(
                 padding: EdgeInsets.all(10),
                 child: CircularProgressIndicator(color: greenColor),
               ),
+
+            // Input Section
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(color: Colors.grey.shade300),
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,blurRadius: 4,offset: const Offset(0, -2),
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: const Offset(0, -2),
                   ),
                 ],
               ),

@@ -45,6 +45,10 @@ class _StatsPageState extends State<StatsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 📱 Responsive Sizes
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+
     final moodIcons = {
       'Happy': Icons.sentiment_satisfied_alt,
       'Sad': Icons.sentiment_dissatisfied,
@@ -71,125 +75,157 @@ class _StatsPageState extends State<StatsPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFFDF6EC),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(w * 0.04),
         child: ListView(
           children: [
             Text(
               "Welcome back, $userName",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: w * 0.055,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 8),
-            _buildHealthScore(),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: h * 0.01),
+
+            _buildHealthScore(w, h),
+
+            SizedBox(height: h * 0.02),
+
+            Text(
               "How are you feeling today?",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: w * 0.045,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            SizedBox(height: h * 0.01),
+
+            // ✅ RESPONSIVE WRAP INSTEAD OF ROW
+            Wrap(
+              alignment: WrapAlignment.spaceAround,
+              spacing: w * 0.06,
+              runSpacing: h * 0.02,
               children: moodIcons.entries.map((entry) {
                 return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: Icon(entry.value, color: moodColors[entry.key]),
-                      iconSize: 36,
+                      icon: Icon(
+                        entry.value,
+                        color: moodColors[entry.key],
+                        size: w * 0.11,
+                      ),
                       onPressed: () {
                         setState(() {
                           controller.addMood(entry.key);
                         });
                       },
                     ),
-                    Text(entry.key),
+                    Text(entry.key, style: TextStyle(fontSize: w * 0.035)),
                   ],
                 );
               }).toList(),
             ),
-            const SizedBox(height: 20),
-            const Text(
+
+            SizedBox(height: h * 0.02),
+
+            Text(
               "Analysis",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: w * 0.048,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 8),
-            _buildPieChart(),
-            const SizedBox(height: 20),
-            _buildTaskSection(),
-            const SizedBox(height: 20),
-            _buildRecentActivity(),
-            const SizedBox(height: 20),
-            _buildOverview(),
+            SizedBox(height: h * 0.01),
+
+            _buildPieChart(w, h),
+
+            SizedBox(height: h * 0.02),
+            _buildTaskSection(w, h),
+
+            SizedBox(height: h * 0.02),
+            _buildRecentActivity(w),
+
+            SizedBox(height: h * 0.02),
+            _buildOverview(w, h),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHealthScore() {
+  // --------------------------------------------------------------------------
+  // HEALTH SCORE
+  // --------------------------------------------------------------------------
+  Widget _buildHealthScore(double w, double h) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text(
+        Text(
           "Your Mental Health Score",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: w * 0.05, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: h * 0.01),
         Text(
           "${_quizScore.toStringAsFixed(0)}%",
-          style: const TextStyle(
-            fontSize: 24,
+          style: TextStyle(
+            fontSize: w * 0.07,
             fontWeight: FontWeight.bold,
             color: Colors.teal,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: h * 0.01),
         LinearProgressIndicator(
-          value: (_quizScore.clamp(0.0, 100.0)) / 100, 
+          value: (_quizScore.clamp(0.0, 100.0)) / 100,
+          minHeight: h * 0.015,
           backgroundColor: Colors.grey.shade300,
           color: Colors.teal,
-          minHeight: 8, 
-          borderRadius: BorderRadius.circular(
-            10,
-          ), 
+          borderRadius: BorderRadius.circular(10),
         ),
       ],
     );
   }
 
-  Widget _buildPieChart() {
+  // --------------------------------------------------------------------------
+  // PIE CHART
+  // --------------------------------------------------------------------------
+  Widget _buildPieChart(double w, double h) {
     final moodData = controller.getMoodPercentages();
     if (moodData.isEmpty) {
       return const Center(child: Text("No mood data yet."));
     }
 
     final entries = moodData.entries.toList();
+
     return SizedBox(
-      height: 200,
+      height: h * 0.28,
       child: PieChart(
         PieChartData(
+          sectionsSpace: 2,
+          centerSpaceRadius: 0,
           sections: entries.asMap().entries.map((mapEntry) {
             final idx = mapEntry.key;
             final e = mapEntry.value;
-            final color = Colors.primaries[idx % Colors.primaries.length];
             return PieChartSectionData(
               title: "${e.key} ${(e.value).toStringAsFixed(1)}%",
               value: e.value,
-              color: color,
-              radius: 120,
-              titleStyle: const TextStyle(
-                fontSize: 12,
+              color: Colors.primaries[idx % Colors.primaries.length],
+              radius: w * 0.3,
+              titleStyle: TextStyle(
+                fontSize: w * 0.03,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             );
           }).toList(),
-          sectionsSpace: 2,
-          centerSpaceRadius: 0,
         ),
       ),
     );
   }
 
-  Widget _buildTaskSection() {
+  // --------------------------------------------------------------------------
+  // TASK SECTION
+  // --------------------------------------------------------------------------
+  Widget _buildTaskSection(double w, double h) {
     final taskTitles = [
       "Morning Meditation",
       "Journal Entry",
@@ -198,52 +234,54 @@ class _StatsPageState extends State<StatsPage> {
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: Colors.white,
       elevation: 3,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(w * 0.04),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Today's Goals",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: w * 0.05,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: h * 0.015),
+
             ...List.generate(taskTitles.length, (index) {
               return CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
                   taskTitles[index],
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: w * 0.04),
                 ),
                 value: controller.user.taskCompletion[index],
-                activeColor: Colors.teal,
                 onChanged: null,
+                activeColor: Colors.teal,
               );
             }),
-            const SizedBox(height: 12),
+
+            SizedBox(height: h * 0.015),
             const Divider(),
+
             Center(
               child: Column(
                 children: [
                   LinearProgressIndicator(
-                    minHeight: 10,
+                    minHeight: h * 0.015,
                     value: controller.getTaskCompletionPercentage() / 100,
                     color: Colors.teal,
                     backgroundColor: Colors.grey[200],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: h * 0.01),
                   Text(
                     "${controller.getTaskCompletionPercentage().toStringAsFixed(0)}% Completed",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: w * 0.04,
+                    ),
                   ),
                 ],
               ),
@@ -254,19 +292,25 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  Widget _buildRecentActivity() {
+  // --------------------------------------------------------------------------
+  // RECENT ACTIVITY
+  // --------------------------------------------------------------------------
+  Widget _buildRecentActivity(double w) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(w * 0.04),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Recent Activity",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: w * 0.045,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             if (controller.user.recentActivity.isEmpty)
               const Text("No recent activity yet.")
             else
@@ -279,41 +323,47 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  Widget _buildOverview() {
+  // --------------------------------------------------------------------------
+  // OVERVIEW CARDS
+  // --------------------------------------------------------------------------
+  Widget _buildOverview(double w, double h) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
+        _overviewCard("Daily Streak",
+            "${controller.user.dailyStreak} days", Colors.greenAccent, w, h),
         _overviewCard(
-          "Daily Streak",
-          "${controller.user.dailyStreak} days",
-          Colors.greenAccent,
-        ),
+            "Top Pages",
+            "${controller.user.recentActivity.length}",
+            Colors.orangeAccent,
+            w,
+            h),
         _overviewCard(
-          "Top Pages",
-          "${controller.user.recentActivity.length}",
-          Colors.orangeAccent,
-        ),
-        _overviewCard(
-          "Total Moods",
-          "${controller.user.moodCounts.values.fold(0, (a, b) => a + b)}",
-          Colors.purpleAccent,
-        ),
+            "Total Moods",
+            "${controller.user.moodCounts.values.fold(0, (a, b) => a + b)}",
+            Colors.purpleAccent,
+            w,
+            h),
       ],
     );
   }
 
-  Widget _overviewCard(String title, String value, Color color) {
+  Widget _overviewCard(
+      String title, String value, Color color, double w, double h) {
     return Container(
-      padding: const EdgeInsets.all(12),
-      width: 100,
+      width: w * 0.28,
+      padding: EdgeInsets.all(w * 0.03),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withOpacity(0.25),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(value, style: const TextStyle(fontSize: 16)),
+          Text(title,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: w * 0.035)),
+          SizedBox(height: h * 0.005),
+          Text(value, style: TextStyle(fontSize: w * 0.05)),
         ],
       ),
     );
