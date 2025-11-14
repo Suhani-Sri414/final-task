@@ -12,8 +12,8 @@ class QuizService {
     final endpoint = profession.toLowerCase().contains('student')
         ? 'studentquiz'
         : 'quiz';
-    final url = Uri.parse('$baseUrl/$endpoint');
 
+    final url = Uri.parse('$baseUrl/$endpoint');
     debugPrint('Fetching quiz for $profession → $url');
 
     final response = await http.get(url);
@@ -26,41 +26,42 @@ class QuizService {
     debugPrint('Full quiz response: $data');
 
     if (data['success'] != true) {
-      throw Exception(
-        'Failed to fetch quiz: ${data['message'] ?? 'Unknown error'}',
-      );
+      throw Exception('Failed to fetch quiz: ${data['message']}');
     }
 
-    
-    final nestedQuestions = data['questions'];
-    if (nestedQuestions == null || nestedQuestions['questions'] == null) {
-      throw Exception('Invalid format: missing nested "questions" key');
+    // SUPPORT BOTH FORMATS:
+    //
+    // 1️⃣ Working Pro API:
+    // { success:true, questions:{ questions:[...] } }
+    //
+    // 2️⃣ Student API:
+    // { success:true, questions:[...] }
+
+    dynamic raw = data['questions'];
+
+    // If format is: { "questions": [...] }
+    if (raw is List) {
+      return raw
+          .map((q) => QuizQuestion.fromJson(q as Map<String, dynamic>))
+          .toList();
     }
 
-    final questionsData = nestedQuestions['questions'];
-
-    if (questionsData is! List) {
-      throw Exception('Invalid format: inner "questions" should be a List');
+    // If format is: { "questions": { "questions": [...] } }
+    if (raw is Map && raw['questions'] is List) {
+      return (raw['questions'] as List)
+          .map((q) => QuizQuestion.fromJson(q as Map<String, dynamic>))
+          .toList();
     }
 
-    
-    final questionsList = questionsData
-        .whereType<Map<String, dynamic>>()
-        .map((q) => Map<String, dynamic>.from(q))
-        .toList();
+    throw Exception("Invalid questions format in API response");
 
-    debugPrint('Parsed ${questionsList.length} questions successfully');
-
-    
-    final parsedQuestions =
-        questionsList.map((q) => QuizQuestion.fromJson(q)).toList();
-
-    return parsedQuestions;
   } catch (e, st) {
     debugPrint('Error in fetchQuiz: $e\n$st');
     return [];
   }
 }
+
+
 
 
 

@@ -189,10 +189,7 @@ class _QuizPageState extends State<QuizPage> {
                         } else {
                           
                           await controller.submitQuiz(context);
-                          final resultData = await controller.fetchResult();
-                          print('Full Result Data: $resultData');
-
-                          if (!mounted) return;
+                          
 
                           
 
